@@ -53,3 +53,25 @@ for (let i = 0; i < library.length; i++) {
     console.log(library[i].info())
 }
 
+const form = document.getElementById("userInput")
+const formButton = document.getElementById("form-button")
+formButton.addEventListener("click", function () {
+    form.style.display = "block"
+})
+
+form.addEventListener("submit", function (event) {
+    event.preventDefault()
+
+    const title = document.getElementById("title").value
+    const author = document.getElementById("author").value
+    const pages = document.getElementById("pages").value
+    const read = document.getElementById("read").checked
+
+    const newBook = new Book(title, author, pages, read)
+
+    displayBook(newBook)
+
+    form.style.display = "none"
+
+    form.reset()
+})
