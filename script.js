@@ -1,77 +1,53 @@
-class Book {
-    constructor(title, author, pages, read, bookID) {
-        this.title = title
-        this.author = author
-        this.pages = pages
-        this.read = read
-        this.bookID = bookID
-    }
+const myLibrary = []
 
-    info() {
-        return `${this.title} by ${this.author}, ${this.pages} pages, ${this.read ? "Read" : "Not Read Yet"} ${this.bookID}`
-    }
+function Book(title, author, numPages, hasRead, id) {
+    this.title = title
+    this.author = author
+    this.numPages = numPages
+    this.hasRead = hasRead
+    this.id = id
 }
 
-const library = []
-
-function addBookToLibrary(title, author, pages, read) {
-    const bookID = crypto.randomUUID()
-    const book = new Book(title, author, pages, read, bookID)
-    library.push(book)
+Book.prototype.info = function () {
+    readPrintStatement = this.hasRead ? "read" : "not read yet"
+    return `${this.title} by ${this.author}, ${this.numPages} pages, ${readPrintStatement}, id:${this.id}`
 }
 
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "270", true)
-addBookToLibrary("Hunger Games", "Suzan Collins", "532", false)
-addBookToLibrary("Divergent", "Veronica Roth", "431", true)
-addBookToLibrary("The Maze Runner", "James Dashner", "315", false)
-
-function displayBook(book) {
-    const container = document.getElementById("container")
-
-    const bookCard = document.createElement("div")
-    bookCard.classList.add("book-card")
-
-    const title = document.createElement("h3")
-    title.textContent = book.title
-
-    const author = document.createElement("p")
-    author.textContent = `Author:${book.author}`
-
-    const pages = document.createElement("p")
-    pages.textContent = `Pages: ${book.pages}`
-
-    const status = document.createElement("p")
-    status.textContent = `Status: ${book.read ? "Read" : "Not Read Yet"}`
-
-    bookCard.append(title, author, pages, status)
-
-    container.appendChild(bookCard)
+function addBookToLibrary(title, author, numPages, hasRead, id) {
+    const newBook = new Book(title, author, numPages, hasRead, id)
+    myLibrary.push(newBook)
 }
 
-for (let i = 0; i < library.length; i++) {
-    displayBook(library[i])
-    console.log(library[i].info())
+addBookToLibrary("The Hobbit", "J.R.R Tolkien", 295, false, 1)
+addBookToLibrary("The Hunger Games", "Suzanne Collins", 374, true, 2)
+addBookToLibrary("Divergent", "Veronica Roth", 487, true, 3)
+addBookToLibrary("The Maze Runner", "James Dashner", 384, false, 4)
+
+for (const book of myLibrary) {
+    console.log(book.info())
 }
 
-const form = document.getElementById("userInput")
-const formButton = document.getElementById("form-button")
-formButton.addEventListener("click", function () {
-    form.style.display = "block"
-})
+function createBookCard(book) {
+    const theCard = document.createElement("div")
+    theCard.setAttribute("class", `book${book.id}`)
 
-form.addEventListener("submit", function (event) {
-    event.preventDefault()
+    const theTitle = document.createElement("p")
+    theTitle.textContent = book.title
+    theCard.append(theTitle)
 
-    const title = document.getElementById("title").value
-    const author = document.getElementById("author").value
-    const pages = document.getElementById("pages").value
-    const read = document.getElementById("read").checked
+    const theAuthor = document.createElement("p")
+    theAuthor.textContent = book.author
+    theCard.appendChild(theAuthor)
 
-    const newBook = new Book(title, author, pages, read)
+    const theNumPages = document.createElement("p")
+    theNumPages.textContent = `${book.numPages} pages`
+    theCard.appendChild(theNumPages)
 
-    displayBook(newBook)
+    const theHasRead = document.createElement("p")
+    theHasRead.textContent = `${book.hasRead ? "Read" : "Not read yet"}`
+    theCard.appendChild(theHasRead)
 
-    form.style.display = "none"
+    document.body.appendChild(theCard)
+}
 
-    form.reset()
-})
+createBookCard(myLibrary[3])
