@@ -1,4 +1,17 @@
+console.log(crypto.randomUUID())
+
 const myLibrary = []
+
+addBookToLibrary("The Hobbit", "J.R.R Tolkien", 295, false, 1)
+addBookToLibrary("The Hunger Games", "Suzanne Collins", 374, true, 2)
+addBookToLibrary("Divergent", "Veronica Roth", 487, true, 3)
+addBookToLibrary("The Maze Runner", "James Dashner", 384, false, 4)
+
+containerDiv = document.querySelector(".container")
+
+for (const book of myLibrary) {
+    createBookCard(book)
+}
 
 function Book(title, author, numPages, hasRead, id) {
     this.title = title
@@ -18,18 +31,9 @@ function addBookToLibrary(title, author, numPages, hasRead, id) {
     myLibrary.push(newBook)
 }
 
-addBookToLibrary("The Hobbit", "J.R.R Tolkien", 295, false, 1)
-addBookToLibrary("The Hunger Games", "Suzanne Collins", 374, true, 2)
-addBookToLibrary("Divergent", "Veronica Roth", 487, true, 3)
-addBookToLibrary("The Maze Runner", "James Dashner", 384, false, 4)
-
-for (const book of myLibrary) {
-    console.log(book.info())
-}
-
 function createBookCard(book) {
     const theCard = document.createElement("div")
-    theCard.setAttribute("class", `book${book.id}`)
+    theCard.setAttribute("class", `book id${book.id}`)
 
     const theTitle = document.createElement("p")
     theTitle.textContent = book.title
@@ -47,7 +51,5 @@ function createBookCard(book) {
     theHasRead.textContent = `${book.hasRead ? "Read" : "Not read yet"}`
     theCard.appendChild(theHasRead)
 
-    document.body.appendChild(theCard)
+    containerDiv.appendChild(theCard)
 }
-
-createBookCard(myLibrary[3])

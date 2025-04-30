@@ -6,3 +6,23 @@
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
 }
+
+.container {
+    display: flex;
+    justify-content: space-around;
+    align-items: start;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    height: 900px;
+    background-color: rgb(242, 224, 200);
+}
+
+.container .book {
+    border: 1px solid black;
+    padding: 10px;
+    height: 200px;
+    width: 40%;
+    background-color: rgb(238, 200, 150);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
