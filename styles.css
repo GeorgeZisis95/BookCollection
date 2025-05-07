@@ -7,13 +7,49 @@
     font-family: "Poppins", sans-serif;
 }
 
+body {
+    display: flex;
+}
+
+.form-container {
+    min-width: 30%;
+    background-color: rgb(255, 152, 42);
+}
+
+.form-container input {
+    width: 100%;
+    padding: 10px 20px 5px 10px;
+    border: none;
+    border-bottom: 1px dotted rgb(32, 32, 34);
+    background-color: inherit;
+    transition: 0.3s ease;
+}
+
+.form-container input::placeholder {
+    color: #fff;
+}
+
+.form-container input::-webkit-outer-spin-button,
+.form-container input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.form-container input:hover {
+    background-color: rgb(255, 169, 78);
+}
+
+.form-container input:focus {
+    outline: none;
+}
+
 .container {
     display: flex;
     justify-content: space-around;
     align-items: start;
     flex-wrap: wrap;
     gap: 10px;
-
+    min-width: 70%;
     height: 900px;
     background-color: rgb(242, 224, 200);
 }
