@@ -1,5 +1,3 @@
-console.log(crypto.randomUUID())
-
 const myLibrary = []
 
 addBookToLibrary("The Hobbit", "J.R.R Tolkien", 295, false, 1)
@@ -12,6 +10,22 @@ containerDiv = document.querySelector(".container")
 for (const book of myLibrary) {
     createBookCard(book)
 }
+
+document.querySelector("form").addEventListener("submit", getFormValues)
+
+function getFormValues(event) {
+    event.preventDefault()
+    const title = event.target.title.value
+    const author = event.target.author.value
+    const pages = event.target.pages.value
+    const read = true
+    const id = myLibrary.length + 1
+    addBookToLibrary(title, author, pages, read, id)
+    createBookCard(myLibrary[myLibrary.length - 1])
+}
+
+
+console.log(myLibrary.length)
 
 function Book(title, author, numPages, hasRead, id) {
     this.title = title
