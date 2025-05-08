@@ -1,3 +1,5 @@
+containerDiv = document.querySelector(".container")
+
 const myLibrary = []
 
 defaultBook1 = createBook("The Hobbit", "J.R.R Tolkien", 295, false, 1)
@@ -5,29 +7,33 @@ defaultBook2 = createBook("The Hunger Games", "Suzanne Collins", 374, true, 2)
 defaultBook3 = createBook("Divergent", "Veronica Roth", 487, true, 3)
 defaultBook4 = createBook("The Maze Runner", "James Dashner", 384, false, 4)
 
-myLibrary.push(defaultBook1)
-myLibrary.push(defaultBook2)
-myLibrary.push(defaultBook3)
-myLibrary.push(defaultBook4)
+localStorage.setItem("book1", JSON.stringify(defaultBook1))
+localStorage.setItem("book2", JSON.stringify(defaultBook2))
+localStorage.setItem("book3", JSON.stringify(defaultBook3))
+localStorage.setItem("book4", JSON.stringify(defaultBook4))
 
-containerDiv = document.querySelector(".container")
+defaultBook1 = JSON.parse(localStorage.getItem("book1"))
+defaultBook2 = JSON.parse(localStorage.getItem("book2"))
+defaultBook3 = JSON.parse(localStorage.getItem("book3"))
+defaultBook4 = JSON.parse(localStorage.getItem("book4"))
 
-for (const book of myLibrary) {
-    createBookCard(book)
-}
-
-for (i = 0; i < localStorage.length; i++) {
-    let newBook = JSON.parse(localStorage.getItem(`book${i + 5}`))
-    if (newBook === null) {
-        continue
+for (const key in localStorage) {
+    if (localStorage.hasOwnProperty(key)) {
+        console.log(key)
+        let newBook = JSON.parse(localStorage.getItem(key))
+        myLibrary.push(newBook)
+        createBookCard(myLibrary[myLibrary.length - 1])
     }
-    console.log(i + 5)
-    console.log(localStorage.length)
-    myLibrary.push(newBook)
-    createBookCard(myLibrary[myLibrary.length - 1])
 }
 
-document.querySelector("form").addEventListener("submit", addBookToLocalStorage)
+document.querySelector("form").addEventListener("submit", addBookFromForm)
+
+const removeButtons = document.querySelectorAll(".remove-button")
+removeButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        localStorage.removeItem(`book${button.dataset.id}`)
+    })
+})
 
 function Book(title, author, numPages, hasRead, id) {
     this.title = title
@@ -66,6 +72,16 @@ function createBookCard(book) {
     theHasRead.textContent = `${book.hasRead ? "Read" : "Not read yet"}`
     theCard.appendChild(theHasRead)
 
+    const theID = document.createElement("p")
+    theID.textContent = `ID: ${book.id}`
+    theCard.appendChild(theID)
+
+    const removeButton = document.createElement("button")
+    removeButton.className = "remove-button"
+    removeButton.dataset.id = book.id
+    removeButton.textContent = "Remove Book"
+    theCard.appendChild(removeButton)
+
     containerDiv.appendChild(theCard)
 }
 
@@ -75,25 +91,15 @@ function getFormValues(event) {
     const author = event.target.author.value
     const pages = event.target.pages.value
     const read = true
-    const id = myLibrary.length + 1
+    const id = myLibrary[myLibrary.length - 1].id + 1
     return [title, author, pages, read, id]
 }
 
-function addBookToLocalStorage(event) {
+function addBookFromForm(event) {
     [title, author, pages, read, id] = getFormValues(event)
     let newBook = createBook(title, author, pages, read, id)
     localStorage.setItem(`book${id}`, JSON.stringify(newBook))
-    retrieveBookFromLocalStorage(id)
-}
-
-function retrieveBookFromLocalStorage(id) {
-    // for (i = 0; i < localStorage.length; i++) {
-    //     let newBook = JSON.parse(localStorage.getItem(`book${i + 5}`))
-    //     myLibrary.push(newBook)
-    //     createBookCard(myLibrary[myLibrary.length - 1])
-    // }
-
-    let newBook = JSON.parse(localStorage.getItem(`book${id}`))
+    newBook = JSON.parse(localStorage.getItem(`book${id}`))
     myLibrary.push(newBook)
     createBookCard(myLibrary[myLibrary.length - 1])
 }
