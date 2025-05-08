@@ -8,8 +8,6 @@ if (elementsToRemove === null) {
     elementsToRemove = []
 }
 
-console.log(elementsToRemove)
-
 defaultBook1 = createBook("The Hobbit", "J.R.R Tolkien", 295, false, 1)
 defaultBook2 = createBook("The Hunger Games", "Suzanne Collins", 374, true, 2)
 defaultBook3 = createBook("Divergent", "Veronica Roth", 487, true, 3)
@@ -26,7 +24,6 @@ myLibrary.push(defaultBook4)
 for (const key in localStorage) {
     if (localStorage.hasOwnProperty(key)) {
         if (key[0] === "b") {
-            console.log(`${key}: ${localStorage.getItem(key)}`)
             myLibrary.push(JSON.parse(localStorage.getItem(key)))
         }
     }
@@ -45,9 +42,7 @@ for (const element of myLibrary) {
     }
 }
 
-document.querySelector("form").addEventListener("submit", addBookFromForm)
-
-const removeButtons = document.querySelectorAll(".remove-button")
+const removeButtons = Array.from(document.querySelectorAll(".remove-button"))
 removeButtons.forEach(button => {
     button.addEventListener("click", () => {
         console.log("CLICKED")
@@ -59,6 +54,8 @@ removeButtons.forEach(button => {
         localStorage.setItem("removes", JSON.stringify(elementsToRemove))
     })
 })
+
+document.querySelector("form").addEventListener("submit", addBookFromForm)
 
 function Book(title, author, numPages, hasRead, id) {
     this.title = title
@@ -127,6 +124,17 @@ function addBookFromForm(event) {
     newBook = JSON.parse(localStorage.getItem(`book${id}`))
     myLibrary.push(newBook)
     createBookCard(myLibrary[myLibrary.length - 1])
+    // This is to be able to delete a card without needing to reload page first
+    const tempButton = document.querySelector(`[data-id='${id}']`)
+    tempButton.addEventListener("click", () => {
+        console.log("CLICKED")
+        // Add remove element here to delete book without needing to reload page
+        const divToRemove = document.querySelector(`.id${tempButton.dataset.id}`)
+        divToRemove.remove()
+        // Also add to local storage so the book stays deleted after page reloads
+        elementsToRemove.push(`${tempButton.dataset.id}`)
+        localStorage.setItem("removes", JSON.stringify(elementsToRemove))
+    })
 }
 
 
