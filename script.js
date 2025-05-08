@@ -1,29 +1,36 @@
 containerDiv = document.querySelector(".container")
 
-const myLibrary = []
+let myLibrary = []
 
 defaultBook1 = createBook("The Hobbit", "J.R.R Tolkien", 295, false, 1)
 defaultBook2 = createBook("The Hunger Games", "Suzanne Collins", 374, true, 2)
 defaultBook3 = createBook("Divergent", "Veronica Roth", 487, true, 3)
 defaultBook4 = createBook("The Maze Runner", "James Dashner", 384, false, 4)
 
-localStorage.setItem("book1", JSON.stringify(defaultBook1))
-localStorage.setItem("book2", JSON.stringify(defaultBook2))
-localStorage.setItem("book3", JSON.stringify(defaultBook3))
-localStorage.setItem("book4", JSON.stringify(defaultBook4))
+myLibrary.push(defaultBook1)
+myLibrary.push(defaultBook2)
+myLibrary.push(defaultBook3)
+myLibrary.push(defaultBook4)
 
-defaultBook1 = JSON.parse(localStorage.getItem("book1"))
-defaultBook2 = JSON.parse(localStorage.getItem("book2"))
-defaultBook3 = JSON.parse(localStorage.getItem("book3"))
-defaultBook4 = JSON.parse(localStorage.getItem("book4"))
+// I save the books inside an array and save the array to LocalMemory
+// This ensures the order of the books is based on when I insert them
 
 for (const key in localStorage) {
     if (localStorage.hasOwnProperty(key)) {
-        console.log(key)
-        let newBook = JSON.parse(localStorage.getItem(key))
-        myLibrary.push(newBook)
-        createBookCard(myLibrary[myLibrary.length - 1])
+        if (key[0] === "b") {
+            console.log(`${key}: ${localStorage.getItem(key)}`)
+            myLibrary.push(JSON.parse(localStorage.getItem(key)))
+        }
     }
+}
+
+localStorage.setItem("library", JSON.stringify(myLibrary))
+
+myLibrary = JSON.parse(localStorage.getItem("library"))
+
+for (const element of myLibrary) {
+    console.log(element.title)
+    createBookCard(element)
 }
 
 document.querySelector("form").addEventListener("submit", addBookFromForm)
@@ -103,3 +110,8 @@ function addBookFromForm(event) {
     myLibrary.push(newBook)
     createBookCard(myLibrary[myLibrary.length - 1])
 }
+
+
+// Now I need a remove function but I encounter two problems
+// When I click on a book to remove it it only disappears after the page reloads
+// When I add a book and try to remove it without reloading the page it does not get removed
