@@ -44,15 +44,7 @@ for (const element of myLibrary) {
 
 const removeButtons = Array.from(document.querySelectorAll(".remove-button"))
 removeButtons.forEach(button => {
-    button.addEventListener("click", () => {
-        console.log("CLICKED")
-        // Add remove element here to delete book without needing to reload page
-        const divToRemove = document.querySelector(`.id${button.dataset.id}`)
-        divToRemove.remove()
-        // Also add to local storage so the book stays deleted after page reloads
-        elementsToRemove.push(`${button.dataset.id}`)
-        localStorage.setItem("removes", JSON.stringify(elementsToRemove))
-    })
+    button.addEventListener("click", removeCard)
 })
 
 document.querySelector("form").addEventListener("submit", addBookFromForm)
@@ -126,18 +118,15 @@ function addBookFromForm(event) {
     createBookCard(myLibrary[myLibrary.length - 1])
     // This is to be able to delete a card without needing to reload page first
     const tempButton = document.querySelector(`[data-id='${id}']`)
-    tempButton.addEventListener("click", () => {
-        console.log("CLICKED")
-        // Add remove element here to delete book without needing to reload page
-        const divToRemove = document.querySelector(`.id${tempButton.dataset.id}`)
-        divToRemove.remove()
-        // Also add to local storage so the book stays deleted after page reloads
-        elementsToRemove.push(`${tempButton.dataset.id}`)
-        localStorage.setItem("removes", JSON.stringify(elementsToRemove))
-    })
+    tempButton.addEventListener("click", removeCard)
 }
 
-
-// Now I need a remove function but I encounter two problems
-// When I click on a book to remove it it only disappears after the page reloads
-// When I add a book and try to remove it without reloading the page it does not get removed
+function removeCard(event) {
+    console.log("CLICKED")
+    // Add remove element here to delete book without needing to reload page
+    const divToRemove = document.querySelector(`.id${event.target.dataset.id}`)
+    divToRemove.remove()
+    // Also add to local storage so the book stays deleted after page reloads
+    elementsToRemove.push(`${event.target.dataset.id}`)
+    localStorage.setItem("removes", JSON.stringify(elementsToRemove))
+}
