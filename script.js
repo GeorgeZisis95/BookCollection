@@ -1,6 +1,14 @@
 containerDiv = document.querySelector(".container")
 
 let myLibrary = []
+let elementsToRemove = []
+
+elementsToRemove = JSON.parse(localStorage.getItem("removes"))
+if (elementsToRemove === null) {
+    elementsToRemove = []
+}
+
+console.log(elementsToRemove)
 
 defaultBook1 = createBook("The Hobbit", "J.R.R Tolkien", 295, false, 1)
 defaultBook2 = createBook("The Hunger Games", "Suzanne Collins", 374, true, 2)
@@ -27,10 +35,14 @@ for (const key in localStorage) {
 localStorage.setItem("library", JSON.stringify(myLibrary))
 
 myLibrary = JSON.parse(localStorage.getItem("library"))
+myLibrary.sort((a, b) => a.id - b.id)
 
 for (const element of myLibrary) {
-    console.log(element.title)
-    createBookCard(element)
+    if (elementsToRemove.includes(`${element.id}`)) {
+        continue
+    } else {
+        createBookCard(element)
+    }
 }
 
 document.querySelector("form").addEventListener("submit", addBookFromForm)
@@ -38,7 +50,13 @@ document.querySelector("form").addEventListener("submit", addBookFromForm)
 const removeButtons = document.querySelectorAll(".remove-button")
 removeButtons.forEach(button => {
     button.addEventListener("click", () => {
-        localStorage.removeItem(`book${button.dataset.id}`)
+        console.log("CLICKED")
+        // Add remove element here to delete book without needing to reload page
+        const divToRemove = document.querySelector(`.id${button.dataset.id}`)
+        divToRemove.remove()
+        // Also add to local storage so the book stays deleted after page reloads
+        elementsToRemove.push(`${button.dataset.id}`)
+        localStorage.setItem("removes", JSON.stringify(elementsToRemove))
     })
 })
 
