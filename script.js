@@ -3,15 +3,23 @@ containerDiv = document.querySelector(".container")
 let myLibrary = []
 let elementsToRemove = []
 
+function Book(title, author, numPages, hasRead, id) {
+    this.title = title
+    this.author = author
+    this.numPages = numPages
+    this.hasRead = hasRead
+    this.id = id
+}
+
 elementsToRemove = JSON.parse(localStorage.getItem("removes"))
 if (elementsToRemove === null) {
     elementsToRemove = []
 }
 
-defaultBook1 = createBook("The Hobbit", "J.R.R Tolkien", 295, false, 1)
-defaultBook2 = createBook("The Hunger Games", "Suzanne Collins", 374, true, 2)
-defaultBook3 = createBook("Divergent", "Veronica Roth", 487, true, 3)
-defaultBook4 = createBook("The Maze Runner", "James Dashner", 384, false, 4)
+const defaultBook1 = new Book("The Hobbit", "J.R.R Tolkien", 295, false, 1)
+const defaultBook2 = new Book("The Hunger Games", "Suzanne Collins", 374, true, 2)
+const defaultBook3 = new Book("Divergent", "Veronica Roth", 487, true, 3)
+const defaultBook4 = new Book("The Maze Runner", "James Dashner", 384, false, 4)
 
 myLibrary.push(defaultBook1)
 myLibrary.push(defaultBook2)
@@ -39,6 +47,11 @@ for (const element of myLibrary) {
         continue
     } else {
         createBookCard(element)
+        let removeButton = document.querySelector(`[data-id="${element.id}"]`)
+        removeButton.addEventListener("click", () => {
+            element.hasRead = element.hasRead ? false : true
+            removeButton.textContent = `Read Status: ${element.hasRead}`
+        })
     }
 }
 
@@ -48,23 +61,6 @@ removeButtons.forEach(button => {
 })
 
 document.querySelector("form").addEventListener("submit", addBookFromForm)
-
-function Book(title, author, numPages, hasRead, id) {
-    this.title = title
-    this.author = author
-    this.numPages = numPages
-    this.hasRead = hasRead
-    this.id = id
-}
-
-Book.prototype.info = function () {
-    readPrintStatement = this.hasRead ? "read" : "not read yet"
-    return `${this.title} by ${this.author}, ${this.numPages} pages, ${readPrintStatement}, id:${this.id}`
-}
-
-function createBook(title, author, numPages, hasRead, id) {
-    return new Book(title, author, numPages, hasRead, id)
-}
 
 function createBookCard(book) {
     const theCard = document.createElement("div")
@@ -82,9 +78,11 @@ function createBookCard(book) {
     theNumPages.textContent = `${book.numPages} pages`
     theCard.appendChild(theNumPages)
 
-    const theHasRead = document.createElement("p")
-    theHasRead.textContent = `${book.hasRead ? "Read" : "Not read yet"}`
-    theCard.appendChild(theHasRead)
+    const toggleButton = document.createElement("button")
+    toggleButton.className = "toggle-button"
+    toggleButton.dataset.id = book.id
+    toggleButton.textContent = `Read Status: ${book.hasRead}`
+    theCard.appendChild(toggleButton)
 
     const theID = document.createElement("p")
     theID.textContent = `ID: ${book.id}`
@@ -111,7 +109,7 @@ function getFormValues(event) {
 
 function addBookFromForm(event) {
     [title, author, pages, read, id] = getFormValues(event)
-    let newBook = createBook(title, author, pages, read, id)
+    let newBook = new Book(title, author, pages, read, id)
     localStorage.setItem(`book${id}`, JSON.stringify(newBook))
     newBook = JSON.parse(localStorage.getItem(`book${id}`))
     myLibrary.push(newBook)
